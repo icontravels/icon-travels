@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Icon Travels</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f8f9fa; }
+    header { background: #007bff; color: white; padding: 20px; text-align: center; }
+    .section { padding: 20px; }
+    .services, .contact { background: white; margin: 20px auto; padding: 20px; border-radius: 8px; max-width: 700px; }
+    .btn { background: #28a745; color: white; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; font-size: 16px; }
+    .form-input { margin-bottom: 15px; display: block; width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; }
+    .btn:hover { background: #218838; transition: background 0.3s ease; }
+    label { font-weight: bold; margin-bottom: 5px; display: block; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Icon Travels</h1>
+  <p>Train | Bus | Flight Ticket Booking</p>
+</header>
+
+<div class="services">
+  <h2>Our Services</h2>
+  <ul>
+    <li>🚆 Train Tickets (All India)</li>
+    <li>🚌 Bus Tickets</li>
+    <li>✈️ Flight Bookings (Domestic & International)</li>
+  </ul>
+  <p>✅ IRCTC Authorized Agent<br>✅ Lowest Fare Guaranteed<br>✅ Instant Booking with WhatsApp Ticket</p>
+</div>
+
+<div class="contact">
+  <h2>Book Now</h2>
+  <form onsubmit="sendWhatsApp(); return false;">
+    
+    <label for="customer_name">Passenger Name</label>
+    <input class="form-input" type="text" id="customer_name" placeholder="Passenger Name" required>
+
+    <label for="phone">Phone Number</label>
+    <input class="form-input" type="tel" id="phone" placeholder="Your Phone Number" required>
+
+    <label for="gender">Gender</label>
+    <select class="form-input" id="gender" required>
+      <option value="" disabled selected>Select Gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="travelDate">Date</label>
+    <input class="form-input" type="date" id="travelDate" required>
+
+    <label for="travelType">Type</label>
+    <select class="form-input" id="travelType" onchange="updateSubOptions()" required>
+      <option value="" disabled selected>Select Type</option>
+      <option value="Train">Train</option>
+      <option value="Bus">Bus</option>
+      <option value="Flight">Flight</option>
+    </select>
+
+    <label for="from">From</label>
+    <select id="from" class="form-input" required>
+      <option value="" disabled selected>Select From</option>
+    </select>
+
+    <label for="to">To</label>
+    <select id="to" class="form-input" required>
+      <option value="" disabled selected>Select To</option>
+    </select>
+
+    <label id="label1" style="display: none;">Option 1</label>
+    <select class="form-input" id="option1" style="display: none;"></select>
+
+    <label id="label2" style="display: none;">Option 2</label>
+    <select class="form-input" id="option2" style="display: none;"></select>
+
+    <label for="message">Other Details / Description</label>
+    <textarea class="form-input" id="message" placeholder="Date, extra details, etc" required></textarea>
+
+    <button class="btn" type="submit">Submit</button>
+  </form>
+</div>
+
+<div class="contact">
+  <h2>Contact Us</h2>
+  <p>
+    📞 Call / WhatsApp: <a href="https://wa.me/919884457776" target="_blank">9884457776</a><br>
+    📧 Email: <a href="mailto:icontravels6@gmail.com">icontravels6@gmail.com</a><br>
+    📍 Address: No. 7, Jaffer Serang Street, Near National Hospital, Mannady, Chennai - 600001
+  </p>
+</div>
+
+<script>
+  const locations = [
+    // Indian Railway Stations (Top)
+    "Chennai Central (MAS)", "New Delhi (NDLS)", "Mumbai CST (CSMT)", "Howrah (HWH)", "Secunderabad (SC)",
+    "Bangalore City (SBC)", "Hyderabad (HYB)", "Coimbatore (CBE)", "Madurai (MDU)", "Trichy (TPJ)",
+    "Thiruvananthapuram (TVC)", "Ernakulam (ERS)", "Tirunelveli (TEN)", "Salem (SA)", "Erode (ED)",
+
+    // Indian Airports
+    "Chennai Airport (MAA)", "Delhi IGI Airport (DEL)", "Mumbai Airport (BOM)", "Bangalore Airport (BLR)",
+    "Hyderabad Airport (HYD)", "Kolkata Airport (CCU)", "Cochin Airport (COK)", "Trichy Airport (TRZ)",
+
+    // International Airports
+    "Dubai International (DXB)", "Singapore Changi (SIN)", "Doha Hamad (DOH)", "London Heathrow (LHR)",
+    "New York JFK (JFK)", "Kuala Lumpur (KUL)", "Bangkok Suvarnabhumi (BKK)", "Frankfurt (FRA)",
+    "Paris CDG (CDG)", "Tokyo Narita (NRT)", "Toronto Pearson (YYZ)", "Melbourne (MEL)", "Sydney (SYD)"
+  ];
+
+  const fromSelect = document.getElementById("from");
+  const toSelect = document.getElementById("to");
+
+  locations.forEach(loc => {
+    fromSelect.add(new Option(loc, loc));
+    toSelect.add(new Option(loc, loc));
+  });
+
+  function updateSubOptions() {
+    const travelType = document.getElementById("travelType").value;
+    const option1 = document.getElementById("option1");
+    const option2 = document.getElementById("option2");
+    const label1 = document.getElementById("label1");
+    const label2 = document.getElementById("label2");
+
+    option1.style.display = 'none';
+    option2.style.display = 'none';
+    label1.style.display = 'none';
+    label2.style.display = 'none';
+    option1.innerHTML = '';
+    option2.innerHTML = '';
+
+    if (travelType === "Bus") {
+      label1.textContent = "Bus Type";
+      label1.style.display = 'block';
+      option1.style.display = 'block';
+      option1.innerHTML = `
+        <option value="" disabled selected>Select Bus Type</option>
+        <option value="A/C">A/C</option>
+        <option value="Non A/C">Non A/C</option>
+      `;
+      option1.onchange = () => {
+        label2.textContent = "Seat Type";
+        label2.style.display = 'block';
+        option2.style.display = 'block';
+        option2.innerHTML = `
+          <option value="" disabled selected>Select Seat Type</option>
+          <option value="Sleeper">Sleeper</option>
+          <option value="Seater">Seater</option>
+        `;
+      };
+    }
+    else if (travelType === "Train") {
+      label1.textContent = "Class";
+      label1.style.display = 'block';
+      option1.style.display = 'block';
+      option1.innerHTML = `
+        <option value="" disabled selected>Select Class</option>
+        <option value="1A">1A</option>
+        <option value="2A">2A</option>
+        <option value="3A">3A</option>
+        <option value="SL">SL</option>
+      `;
+      option1.onchange = null;
+    }
+    else if (travelType === "Flight") {
+      label1.textContent = "Flight Class";
+      label1.style.display = 'block';
+      option1.style.display = 'block';
+      option1.innerHTML = `
+        <option value="" disabled selected>Select Flight Class</option>
+        <option value="Economy
+                <option value="Economy">Economy</option>
+        <option value="Business">Business</option>
+      `;
+      option1.onchange = null;
+    }
+  }
+
+  function sendWhatsApp() {
+    const name = document.getElementById('customer_name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const gender = document.getElementById('gender').value;
+    const date = document.getElementById('travelDate').value;
+    const travel = document.getElementById('travelType').value;
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const option1Val = document.getElementById('option1').value || 'N/A';
+    const option2Val = document.getElementById('option2').value || 'N/A';
+    const message = document.getElementById('message').value.trim();
+
+    if (!name || !phone || !gender || !date || !travel || !from || !to || !message) {
+      alert('Please fill all required fields.');
+      return;
+    }
+
+    const fullMessage =
+      `Passenger Name: ${name}
+Phone Number: ${phone}
+Gender: ${gender}
+Date: ${date}
+Type: ${travel}
+From: ${from}
+To: ${to}
+Option 1: ${option1Val}
+Option 2: ${option2Val}
+Other Details: ${message}`;
+
+    const encoded = encodeURIComponent(fullMessage);
+    const waUrl = https://wa.me/919884457776?text=${encoded};
+
+    window.open(waUrl, '_blank');
+    alert('Booking details sent via WhatsApp!');
+
+    // Optional: reset form after send
+    document.querySelector("form").reset();
+  }
+
+  // Optional: prevent past dates
+  document.getElementById("travelDate").min = new Date().toISOString().split("T")[0];
+</script>
+
+</body>
+</html>
